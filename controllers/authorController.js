@@ -1,9 +1,14 @@
-var Author = require("../models/author");
+const Author = require("../models/author");
+const asyncHandler = require("express-async-handler");
 
-// Показать список всех авторов.
-exports.author_list = function (req, res) {
-  res.send("NOT IMPLEMENTED: Author list");
-};
+// Display list of all Authors.
+exports.author_list = asyncHandler(async (req, res, next) => {
+  const allAuthors = await Author.find().sort({ family_name: 1 }).exec();
+  res.render("author_list", {
+    title: "Author List",
+    author_list: allAuthors,
+  });
+});
 
 // Показать подробную страницу для данного автора.
 exports.author_detail = function (req, res) {
