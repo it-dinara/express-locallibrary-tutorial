@@ -13,7 +13,8 @@ const app = express();
 // Set up mongoose connection
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
-const mongoDB = " -_- ";
+const mongoDB =
+  "mongodb+srv://archenemydinara:iWnmC3COKbaQjUK0@cluster0.lwvtk.mongodb.net/local_library?retryWrites=true&w=majority&appName=Cluster0";
 // var mongoDB = "mongodb://127.0.0.1/my_database";
 
 main().catch((err) => console.log(err));
