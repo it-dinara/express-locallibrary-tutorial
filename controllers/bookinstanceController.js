@@ -1,23 +1,33 @@
+const asyncHandler = require("express-async-handler");
 var BookInstance = require("../models/bookinstance");
 
 // Display list of all BookInstances.
-exports.bookinstance_list = function (req, res, next) {
-  BookInstance.find()
-    .populate("book")
-    .exec()
-    .then((list_bookinstances) => {
-      res.render("bookinstance_list", {
-        title: "Book Instance List",
-        bookinstance_list: list_bookinstances,
-      });
-    })
-    .catch((err) => next(err));
-};
+exports.bookinstance_list = asyncHandler(async (req, res, next) => {
+  const allBookInstances = await BookInstance.find().populate("book").exec();
+
+  res.render("bookinstance_list", {
+    title: "Book Instance List",
+    bookinstance_list: allBookInstances,
+  });
+});
 
 // Display detail page for a specific BookInstance.
-exports.bookinstance_detail = function (req, res) {
-  res.send("NOT IMPLEMENTED: BookInstance detail: " + req.params.id);
-};
+exports.bookinstance_detail = asyncHandler(async (req, res, next) => {
+  const bookInstance = await BookInstance.findById(req.params.id)
+    .populate("book")
+    .exec();
+
+  if (bookInstance === null) {
+    const err = new Error("Book copy not found");
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render("bookinstance_detail", {
+    title: "Book Instance Detail",
+    bookinstance: bookInstance,
+  });
+});
 
 // Display BookInstance create form on GET.
 exports.bookinstance_create_get = function (req, res) {
